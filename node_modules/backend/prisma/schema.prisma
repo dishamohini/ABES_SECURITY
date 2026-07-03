@@ -1,0 +1,141 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String         @id @default(uuid())
+  email            String         @unique
+  passwordHash     String
+  name             String
+  role             String         // SECURITY_GUARD, FACULTY, DEPT_HEAD, SECURITY_ADMIN
+  idCardNumber     String?        @unique
+  employeeCode     String?        @unique
+  extensionNumber  String?
+  post             String?
+  photoUrl         String?
+  status           String         @default("ACTIVE") // ACTIVE, SUSPENDED, BLOCKLISTED
+  department       String?
+  phone            String?
+  
+  // Relations
+  vehicles         Vehicle[]
+  assignedVisits   VisitRequest[] @relation("ApproverVisits")
+  entryLogs        EntryLog[]     @relation("GuardLogs")
+  userLogs         EntryLog[]     @relation("UserLogs")
+  auditLogs        AuditLog[]
+  
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Vehicle {
+  id            String      @id @default(uuid())
+  stickerNumber String      @unique
+  ownerId       String?
+  owner         User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  vehicleType   String      // TWO_WHEELER, FOUR_WHEELER, DELIVERY, OTHER
+  plateNumber   String
+  status        String      @default("ACTIVE") // ACTIVE, INACTIVE, BLOCKLISTED
+  
+  entryLogs     EntryLog[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Gate {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  location  String?
+  entryLogs EntryLog[]
+}
+
+model EntryLog {
+  id          String    @id @default(uuid())
+  direction   String    // IN, OUT
+  timestamp   DateTime  @default(now())
+  
+  // Association (Either Person or Vehicle or Visitor)
+  userId      String?
+  user        User?     @relation("UserLogs", fields: [userId], references: [id])
+  
+  vehicleId   String?
+  vehicle     Vehicle?  @relation(fields: [vehicleId], references: [id])
+  
+  visitorId   String?
+  visitor     Visitor?  @relation(fields: [visitorId], references: [id])
+  
+  gateId      String
+  gate        Gate      @relation(fields: [gateId], references: [id])
+  
+  guardId     String
+  guard       User      @relation("GuardLogs", fields: [guardId], references: [id])
+}
+
+model Visitor {
+  id                        String         @id @default(uuid())
+  name                      String
+  phone                     String
+  facePhotoRef              String         // Path or S3 key to encrypted photo
+  facePhotoKeyEncrypted     String         // AES-encrypted key for face photo
+  aadhaarNumberEncrypted    String         // AES-encrypted Aadhaar number
+  aadhaarNumberMasked       String         // e.g. XXXX-XXXX-1234
+  consentAccepted           Boolean        @default(false)
+  consentTimestamp          DateTime?
+  
+  visits                    VisitRequest[]
+  entryLogs                 EntryLog[]
+  
+  createdAt                 DateTime       @default(now())
+  purgedAt                  DateTime?      // When biometrics and sensitive data were deleted
+}
+
+model VisitRequest {
+  id                  String       @id @default(uuid())
+  visitorId           String
+  visitor             Visitor      @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  purposeCategory     String       // ADMISSION, MEETING, DELIVERY, EVENT, OTHER
+  purposeDetails      String?
+  
+  approverId          String?
+  approver            User?        @relation("ApproverVisits", fields: [approverId], references: [id])
+  
+  status              String       @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  rejectionReason     String?
+  approvalMessage     String?      // E.g. "Send to Room 204"
+  
+  approvedAt          DateTime?
+  entryTime           DateTime?
+  exitTime            DateTime?
+  exitFaceMatchScore  Float?
+
+  // Authorization Tracking
+  allowedById         String?
+  allowedByRole       String?      // SECURITY_GUARD, FACULTY, DEPT_HEAD, SECURITY_ADMIN
+  allowedByName       String?
+  
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  actorId      String?
+  actor        User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action       String   // e.g., VIEW_AADHAAR, EDIT_VISITOR, VIEW_FACE
+  targetRecord String   // Type and UUID of the targeted record (e.g. Visitor:uuid)
+  details      String?  // Optional metadata or context (no sensitive data)
+  ipAddress    String?
+  timestamp    DateTime @default(now())
+}
+
+model SystemSettings {
+  id                        Int      @id @default(1)
+  dataRetentionDays         Int      @default(90)
+  maxInsideDurationMinutes  Int      @default(720) // 12 hours alert flag
+  updatedAt                 DateTime @updatedAt
+}

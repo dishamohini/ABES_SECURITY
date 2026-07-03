@@ -1,0 +1,88 @@
+s.no.,name,employeeCode,department,designation,extentionnumber,phone,email
+1,Prof. (Dr). Pankaj Kumar Sharma ,195,CSE,HOD CSE,*319,9899346360,hod.cse@abes.ac.in
+2,Dr. Anil Kumar Dubey,3439,CSE,Professor,*529,9783934206,anil.dubey@abes.ac.in
+3,Dr. Anshul Tickoo ,3434,CSE,Professor,*272,9999551473,anshul.tickoo@abes.ac.in
+4,Dr. Kadambri Agarwal ,3014,CSE,Professor,*842,9873309345,kadambri.agarwal@abes.ac.in
+5,Dr. Manu Singh ,3062,CSE,Professor,*890,9319045238,manu.singh@abes.ac.in
+6,Dr. Rakesh Ranjan ,3189,CSE,Professor,*771,9935815720,rakesh.ranjan@abes.ac.in
+7,Dr. Rohit Rastogi ,0018,CSE,Professor,*510,9818992772,rohit.rastogi@abes.ac.in
+8,Dr. Anshika Agarwal ,2898,CSE,Associate Professor,*747,8791884584,anshika.agarwal@abes.ac.in
+9,Dr. Jitendra Kumar ,3162,CSE,Associate Professor,*704,9412135736,jitendra.kumar@abes.ac.in
+10,Dr. Neha Gupta ,3187,CSE,Associate Professor,*531,9810363749,neha.gupta@abes.ac.in
+11,Dr. Sandhya Avasthi ,2865,CSE,Associate Professor,*543,9899987851,sandhya.avasthi@abes.ac.in
+12,Dr. Shanu Sharma ,2931,CSE,Associate Professor,*795,8527509685,shanu.sharma@abes.ac.in
+13,Dr. Shruti Gupta ,2940,CSE,Associate Professor,*805,9891480720,shruti.gupta@abes.ac.in
+14,Dr. Somya Srivastava ,2883,CSE,Associate Professor,*555,9648710515,somya.srivastava@abes.ac.in
+15,Dr. Vipin Sharma ,3441,CSE,Associate Professor,*584,9412303301,vipin.sharma@abes.ac.in
+16,Dr. Shweta Roy ,2882,CSE,Senior Scale Asst.Prof.,*506,9873821160,shweta.roy@abes.ac.in
+17,Ms. Abhilasha Varshney ,2884,CSE,Senior Scale Asst.Prof.,*556,9911320062,abhilasha.varshney@abes.ac.in
+18,Mr. Abhishek Kumar Shukla ,2925,CSE,Senior Scale Asst.Prof.,*788,9313124352,abhishek kumar.shukla@abes.ac.in
+19,Ms. Aditi Arora ,2625,CSE,Senior Scale Asst.Prof.,*773,9953491843,aditi.arora@abes.ac.in
+20,Mr. Aditya Tandon ,3387,CSE,Senior Scale Asst.Prof.,*260,8750006999,aditya.tandon@abes.ac.in
+21,Mr. Akhilesh Kr. Srivastava ,2094,CSE,Senior Scale Asst.Prof.,*775,8826369129,akhilesh kr.srivastava@abes.ac.in
+22,Ms. Anita Rani ,3418,CSE,Senior Scale Asst.Prof.,*498,8178741525,anita.rani@abes.ac.in
+23,Mr. Anurag Gupta ,3400,CSE,Senior Scale Asst.Prof.,*262,8439012485,anurag.gupta@abes.ac.in
+24,Mr. Arvind Kumar ,3267,CSE,Senior Scale Asst.Prof.,*504,9456077973,arvind.kumar@abes.ac.in
+26,Ms. Babli Kumari ,,CSE,Senior Scale Asst.Prof.,*573,,babli.kumari@abes.ac.in
+27,Mr. Chandrahas Mishra ,,CSE,Senior Scale Asst.Prof.,*270,,chandrahas.mishra@abes.ac.in
+28,Mr. Deepak Kanojia ,,CSE,Senior Scale Asst.Prof.,*503,,deepak.kanojia@abes.ac.in
+29,Mr. Devendra Kumar Misra ,,CSE,Senior Scale Asst.Prof.,*821,,devendra kumar.misra@abes.ac.in
+30,Mr. Dhaneshwar Kumar ,,CSE,Senior Scale Asst.Prof.,*763,,dhaneshwar.kumar@abes.ac.in
+31,Dr. Disha Mohini Pathak ,2888,CSE,Senior Scale Asst.Prof.,*558,8826006656,disha.pathak@abes.ac.in
+32,Mr. Gaurav Vats ,,CSE,Senior Scale Asst.Prof.,*789,,gaurav.vats@abes.ac.in
+34,Ms. Jyoti Sharma ,,CSE,Senior Scale Asst.Prof.,*568,,jyoti.sharma@abes.ac.in
+36,Ms. Laxmi Saraswat ,2810,CSE,Senior Scale Asst.Prof.,*515,8929820307,laxmi.saraswat@abes.ac.in
+37,Ms. Madhvi Gaur ,941,CSE,Senior Scale Asst.Prof.,*514,,madhvi.gaur@abes.ac.in
+38,Ms. Malvika Gupta ,,CSE,Senior Scale Asst.Prof.,*816,,malvika.gupta@abes.ac.in
+39,Mr. Mayank Mittal ,,CSE,Senior Scale Asst.Prof.,*594,,mayank.mittal@abes.ac.in
+41,Ms. Pooja Singhal ,,CSE,Senior Scale Asst.Prof.,*874,,pooja.singhal@abes.ac.in
+42,Mr. Praveen Kumar Rai ,,CSE,Senior Scale Asst.Prof.,*832,,praveen kumar.rai@abes.ac.in
+43,Ms. Sapna Jain ,,CSE,Senior Scale Asst.Prof.,*769,,sapna.jain@abes.ac.in
+44,Ms. Sarita Yadav ,,CSE,Senior Scale Asst.Prof.,*501,,sarita.yadav@abes.ac.in
+45,Ms. Satwik Teotia ,,CSE,Senior Scale Asst.Prof.,*335,,satwik.teotia@abes.ac.in
+46,Ms. Shivani Trivedi ,,CSE,Senior Scale Asst.Prof.,*767,,shivani.trivedi@abes.ac.in
+47,Ms. Shruti Keshari ,,CSE,Senior Scale Asst.Prof.,*772,,shruti.keshari@abes.ac.in
+48,Ms. Shweta Singh ,,CSE,Senior Scale Asst.Prof.,*493,,shweta.singh@abes.ac.in
+49,Ms. Sonia Lamba ,2791,CSE,Senior Scale Asst.Prof.,*534,9810390427,sonia.lamba@abes.ac.in
+50,Ms. Sonia Verma ,,CSE,Senior Scale Asst.Prof.,*839,,sonia.verma@abes.ac.in
+51,Mr. Sumit Agarwal ,,CSE,Senior Scale Asst.Prof.,*446,,sumit.agarwal@abes.ac.in
+52,Ms. Swati ,,CSE,Senior Scale Asst.Prof.,*900,,swati.swati@abes.ac.in
+53,Ms. Tanushri ,,CSE,Senior Scale Asst.Prof.,*598,,tanushri.tanushri@abes.ac.in
+54,Ms. Tanvi Shree ,,CSE,Senior Scale Asst.Prof.,*492,,tanvi.shree@abes.ac.in
+55,Ms. Vandana Sharma ,,CSE,Senior Scale Asst.Prof.,*343,,vandana.sharma@abes.ac.in
+56,Mr. Vinay Singh ,,CSE,Senior Scale Asst.Prof.,*541,,vinay.singh@abes.ac.in
+57,Mr. Vivek Kumar ,,CSE,Senior Scale Asst.Prof.,*346,,vivek.kumar@abes.ac.in
+58,Mr. Vivek Srivastava ,,CSE,Senior Scale Asst.Prof.,*521,,vivek.srivastava@abes.ac.in
+59,Ms. Yashi Rastogi ,,CSE,Senior Scale Asst.Prof.,*849,,yashi.rastogi@abes.ac.in
+60,Mr. Abhishek Chaudhary ,,CSE,Assistant Professor,*731,,abhishek.chaudhary@abes.ac.in
+61,Mr. Abhishek Yadav ,,CSE,Assistant Professor,*595,,abhishek.yadav@abes.ac.in
+62,Ms. Akshita Sharma ,,CSE,Assistant Professor,,,akshita.sharma@abes.ac.in
+63,Ms. Anshika Chaudhary ,,CSE,Assistant Professor,*723,9557722288,anshika.chaudhary@abes.ac.in
+64,Ms. Anuksha Srivastava ,,CSE,Assistant Professor,*593,,anuksha.srivastava@abes.ac.in
+65,Ms. Apoorva Singh ,,CSE,Assistant Professor,*579,,apoorva.singh@abes.ac.in
+66,Ms. Astha Goyal ,,CSE,Assistant Professor,*960,,astha.goyal@abes.ac.in
+67,Ms. Ayushi Agarwal ,,CSE,Assistant Professor,*390,,ayushi.agarwal@abes.ac.in
+68,Ms. Beena Srivastava ,,CSE,Assistant Professor,*578,,beena.srivastava@abes.ac.in
+69,Ms. Bharati Shukla ,,CSE,Assistant Professor,*848,,bharati.shukla@abes.ac.in
+70,Ms. Divya Maheshwari ,,CSE,Assistant Professor,*656,,divya.maheshwari@abes.ac.in
+71,Ms. Harsiddhi Dev ,,CSE,Assistant Professor,*251,,harsiddhi.dev@abes.ac.in
+72,Ms. Komal ,,CSE,Assistant Professor,*265,,komal.komal@abes.ac.in
+73,Ms. Mansi Mahendru ,,CSE,Assistant Professor,*540,,mansi.mahendru@abes.ac.in
+74,Ms. Neetu Bansla ,,CSE,Assistant Professor,*220,,neetu.bansla@abes.ac.in
+75,Ms. Neha Gaur ,,CSE,Assistant Professor,,,neha.gaur@abes.ac.in
+76,Ms. Nepali Singla ,,CSE,Assistant Professor,*356,,nepali.singla@abes.ac.in
+77,Ms. Nidhi Shalya ,,CSE,Assistant Professor,*256,,nidhi.shalya@abes.ac.in
+78,Ms. Nidhi Yadav ,,CSE,Assistant Professor,*567,,nidhi.yadav@abes.ac.in
+80,Mr. Sanghpriya Gautam ,,CSE,Assistant Professor,*592,,sanghpriya.gautam@abes.ac.in
+82,Ms. Shailja Varshney ,,CSE,Assistant Professor,*648,,shailja.varshney@abes.ac.in
+83,Mr. Vaibhav Ranjan ,,CSE,Assistant Professor,*759,,vaibhav.ranjan@abes.ac.in
+84,Mr. Varun Kumar ,,CSE,Assistant Professor,,,varun.kumar@abes.ac.in
+86,Mr. Vikas Maurya ,,CSE,Assistant Professor,*274,,vikas.maurya@abes.ac.in
+87,Mr. Ravi Sikka,,CSE,Assistant Professor,*266,,ravi.sikka@abes.ac.in
+88,Ms. Shruti Agarwal ,,CSE,Assistant Professor,*273,,shruti.agarwal@abes.ac.in
+89,Ms. Komal,3443,CSE,Assistant Professor- Coordinator,*265,9058061438,komal.komal@abes.ac.in
+90,Mr. Abhishek Yadav,,CSE,Assistant Professor- Coordinator,*595,,abhishek.yadav@abes.ac.in
+91,Mr. S.P. Gautam,,CSE,Assistant Professor- Coordinator,*592,,s.p.gautam@abes.ac.in
+92,Mr. Rahul Kumar ,3450,CSE,Assistant Professor- Coordinator,*601,9027585576,rahul.kumar@abes.ac.in
+93,Ms. Nainsi,3454,CSE,Assistant Professor- Coordinator,*266,7456890386,nainsi.nainsi@abes.ac.in
+94,Mr. Vikky,3457,CSE,Assistant Professor- Coordinator,*269,8869087750,vikky.vikky@abes.ac.in
