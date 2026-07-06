@@ -11,9 +11,10 @@ RUN apt-get update && apt-get install -y \
 # Set up working directory
 WORKDIR /app
 
-# Copy root package configs
+# Copy root and workspace package configs
 COPY package*.json ./
 COPY backend/package*.json ./backend/
+COPY frontend/package*.json ./frontend/
 
 # Install workspace dependencies
 RUN npm install
