@@ -21,10 +21,11 @@ services:
         value: 5000
 
   # 2. Frontend Static Site
-  - type: static
+  - type: web
     name: abes-security-frontend
+    env: static
     buildCommand: npm run build --workspace=frontend
-    publishDir: frontend/dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
         fromRoute:
