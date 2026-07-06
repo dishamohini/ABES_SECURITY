@@ -28,10 +28,7 @@ services:
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
-        fromRoute:
-          type: web
-          name: abes-security-backend
-          property: url
+        value: https://your-backend-service.onrender.com
 
 databases:
   - name: abes-security-db
