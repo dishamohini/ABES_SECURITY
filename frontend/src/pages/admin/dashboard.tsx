@@ -5,6 +5,7 @@ import {
   Settings, Clock, Search, MapPin, Database, RefreshCw, AlertTriangle, 
   CheckCircle2, Plus, Download, Eye, EyeOff, ShieldCheck 
 } from 'lucide-react';
+import { ThemeSwitcher } from '../../components/ThemeSwitcher';
 
 export const AdminDashboard: React.FC = () => {
   const { token, logout, user } = useAuth();
@@ -655,8 +656,14 @@ export const AdminDashboard: React.FC = () => {
           </nav>
         </div>
 
+        {/* Theme Selector */}
+        <div className="pt-4 pb-2 border-t border-slate-800 flex justify-between items-center text-xs">
+          <span className="text-slate-450 font-bold uppercase tracking-wider text-[9px]">Theme Mode</span>
+          <ThemeSwitcher />
+        </div>
+
         {/* User Card */}
-        <div className="pt-6 border-t border-slate-800 flex justify-between items-center text-xs">
+        <div className="pt-4 border-t border-slate-800 flex justify-between items-center text-xs">
           <div>
             <p className="font-bold text-white truncate max-w-[130px]">{user?.name}</p>
             <p className="text-[10px] text-slate-500">Security Head</p>

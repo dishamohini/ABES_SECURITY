@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useOffline } from '../../context/OfflineContext';
 import { QRScanner } from '../../components/QRScanner';
+import { ThemeSwitcher } from '../../components/ThemeSwitcher';
 import { 
   LogOut, ShieldAlert, CheckCircle2, CloudLightning, Wifi, WifiOff, 
   MapPin, UserPlus, LogIn, FileSpreadsheet, RefreshCw, AlertTriangle 
@@ -164,6 +165,8 @@ export const GuardDashboard: React.FC<{
               <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
             </button>
           )}
+
+          <ThemeSwitcher />
 
           <button
             onClick={logout}

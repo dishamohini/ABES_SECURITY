@@ -36,6 +36,9 @@ app.use((req, res, next) => {
 // ==========================================
 app.post('/api/auth/login', authController.login);
 app.post('/api/auth/change-password', authController.changePassword);
+app.get('/api/visitors/face/:visitorId', visitorController.getFacePhoto);
+app.get('/api/visitors/request/:id/public', visitorController.getPublicVisitRequest);
+app.post('/api/visitors/request/:id/public-decide', visitorController.publicDecideApproval);
 
 // ==========================================
 // 2. AUTHENTICATED ROUTES
@@ -80,7 +83,6 @@ app.post(
 );
 
 // Decrypted biometrics/IDs (requires audit logs logged within controllers)
-app.get('/api/visitors/face/:visitorId', visitorController.getFacePhoto);
 app.get(
   '/api/visitors/aadhaar/:visitorId',
   requireRoles(['SECURITY_ADMIN', 'DEPT_HEAD']),

@@ -183,6 +183,7 @@ export const VisitorForm: React.FC<{
       purposeDetails,
       hostUserId: purposeCategory === 'MEETING' ? selectedHostId : undefined,
       facePhotoBase64: facePhoto,
+      idPhotoBase64: aadhaarPhoto,
       aadhaarNumber,
       gateId: activeGateId
     };
@@ -601,7 +602,38 @@ export const VisitorForm: React.FC<{
                   </p>
                   <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-semibold">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" /> Polling approver inbox...
-                                     {/* Guard Phone Call Override Action */}
+                  </div>
+
+                  {/* WhatsApp Verification Option */}
+                  {visitRequest.approver && (
+                    <div className="mt-4 bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 text-center space-y-3">
+                      <p className="text-[11px] text-emerald-450 font-medium leading-relaxed max-w-xs mx-auto">
+                        Send a quick-approval link to the host's WhatsApp. They can authorize entry with a single tap from their phone:
+                      </p>
+                      
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const hostPhone = visitRequest.approver.phone || '';
+                          const cleanPhone = hostPhone.replace(/\D/g, '');
+                          
+                          const link = `http://localhost:5173/approve-request/${visitRequest.id}`;
+                          const text = `Hello ${visitRequest.approver.name},\n\nVisitor *${name || visitRequest.visitor?.name}* is waiting to meet you at the gate.\nCategory: ${purposeCategory}\nDetails: ${purposeDetails || 'N/A'}\n\nPlease click this link to instantly APPROVE or DENY entry:\n${link}`;
+                          
+                          const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}&text=${encodeURIComponent(text)}`;
+                          window.open(waUrl, '_blank');
+                        }}
+                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs rounded-xl uppercase transition tracking-wider flex items-center justify-center gap-2 shadow-glow"
+                      >
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.008 14.07 1.01 11.49 1.01 6.06 1.01 1.636 5.38 1.632 10.81c-.001 1.674.452 3.308 1.311 4.787L1.93 21.03l4.717-1.226-.001-.001-.001-.001zM17.522 14.34c-.302-.15-1.786-.872-2.057-.97-.272-.1-.469-.15-.669.15-.199.299-.77.969-.944 1.168-.175.199-.349.224-.651.075-1.127-.562-1.977-.962-2.753-1.63-.589-.508-.881-.849-.968-.999-.087-.15-.009-.231.066-.306.068-.067.15-.175.225-.263.076-.088.1-.15.15-.25.05-.1.025-.187-.012-.263-.038-.075-.369-.887-.506-1.217-.132-.321-.267-.276-.37-.282-.095-.005-.205-.006-.314-.006-.11 0-.287.041-.439.206-.152.165-.58.567-.58 1.383s.6 1.611.684 1.724c.082.113 1.18 1.785 2.859 2.508.4.172.711.275.954.351.402.128.769.11 1.058.067.322-.048 1.786-.723 2.037-1.423.25-.7.25-1.3.175-1.423-.075-.124-.272-.199-.574-.35z" />
+                        </svg>
+                        Send WhatsApp Alert
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Guard Phone Call Override Action */}
                   <div className="mt-6 border-t border-slate-800/80 pt-5 space-y-4">
                     {visitRequest.approver && (
                       <div className="bg-slate-950 p-4 rounded-xl border border-white/5 space-y-2.5 text-left text-xs">
@@ -639,7 +671,7 @@ export const VisitorForm: React.FC<{
                       Confirm Phone Call & Allow Entry
                     </button>
                     {error && <p className="text-[10px] text-red-400 font-semibold mt-1">{error}</p>}
-                  </div>  </div>
+                  </div>
                 </>
               )}
 

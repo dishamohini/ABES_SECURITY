@@ -7,6 +7,7 @@ import { VisitorForm } from './pages/guard/visitor-form';
 import { ExitScan } from './pages/guard/exit-scan';
 import { ApproverDashboard } from './pages/approver/dashboard';
 import { AdminDashboard } from './pages/admin/dashboard';
+import { PublicApprovalPage } from './pages/public-approval';
 import { RefreshCw } from 'lucide-react';
 
 const NavigationContainer: React.FC = () => {
@@ -15,6 +16,21 @@ const NavigationContainer: React.FC = () => {
   // Guard local page state: 'dashboard' | 'visitor-form' | 'exit-scan' | 'visitor-checkin:requestId'
   const [guardPage, setGuardPage] = useState<string>('dashboard');
   const [overrideRequestId, setOverrideRequestId] = useState<string | undefined>(undefined);
+
+  // Initialize theme on mount
+  React.useEffect(() => {
+    const activeTheme = localStorage.getItem('abes-theme') || 'cyber-dark';
+    document.body.classList.remove('theme-light', 'theme-corporate');
+    if (activeTheme === 'light') document.body.classList.add('theme-light');
+    if (activeTheme === 'corporate-abes') document.body.classList.add('theme-corporate');
+  }, []);
+
+  // Check if we are visiting the public Quick Approval route from WhatsApp
+  const pathname = window.location.pathname;
+  if (pathname.startsWith('/approve-request/')) {
+    const requestId = pathname.split('/').pop() || '';
+    return <PublicApprovalPage requestId={requestId} />;
+  }
 
   if (isLoading) {
     return (

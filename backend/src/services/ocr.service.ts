@@ -1,4 +1,6 @@
-import { createWorker } from 'tesseract.js';
+import fs from 'fs';
+import path from 'path';
+import { execFile } from 'child_process';
 
 export interface OCRExtractionResult {
   name: string;
@@ -7,59 +9,56 @@ export interface OCRExtractionResult {
 }
 
 export async function extractAadhaarDetails(imageBuffer: Buffer): Promise<OCRExtractionResult> {
-  try {
-    // If the image is extremely small or looks like a mock, skip heavy OCR and return mock data
-    if (imageBuffer.length < 5000) {
-      return getMockAadhaar();
-    }
-
-    // Initialize Tesseract worker
-    const worker = await createWorker('eng');
-    const { data: { text } } = await worker.recognize(imageBuffer);
-    await worker.terminate();
-
-    console.log('OCR Raw Text Extracted:', text);
-
-    // Regex to match Aadhaar: 12 digits, sometimes grouped in 4s with spaces or hyphens
-    const aadhaarRegex = /(\d{4}\s\d{4}\s\d{4}|\d{12})/g;
-    const match = text.match(aadhaarRegex);
-    let aadhaarNumber = '';
-    
-    if (match && match.length > 0) {
-      aadhaarNumber = match[0].replace(/\s|-/g, '');
-    }
-
-    // Simple Name extraction heuristic (capitalized words on a line, avoiding common words)
-    // E.g., "To", "Government", "India", "DOB", "Male", "Female", "Year"
-    const lines = text.split('\n');
-    let name = '';
-    
-    for (const line of lines) {
-      const trimmed = line.trim();
-      // Look for lines containing 2-3 capitalized words, which often represent name
-      if (/^[A-Z][a-z]+\s[A-Z][a-z]+(\s[A-Z][a-z]+)?$/.test(trimmed)) {
-        if (!/Government|India|Father|Address|Income|Tax|Unique/.test(trimmed)) {
-          name = trimmed;
-          break;
-        }
-      }
-    }
-
-    if (aadhaarNumber) {
-      return {
-        name: name || 'Extracted Name',
-        aadhaarNumber: aadhaarNumber,
-        success: true,
-      };
-    }
-
-    // If OCR runs but can't find a valid Aadhaar number pattern, we return a fallback
-    return getMockAadhaar();
-  } catch (error) {
-    console.error('OCR Error:', error);
-    // Return mock fallback so the application doesn't crash on invalid/unreadable images
+  // If the image is extremely small or looks like a mock, skip heavy OCR and return mock data immediately
+  if (imageBuffer.length < 5000) {
     return getMockAadhaar();
   }
+
+  const tempFilePath = path.join(__dirname, '../../temp_ocr.jpg');
+  
+  try {
+    fs.writeFileSync(tempFilePath, imageBuffer);
+  } catch (writeError) {
+    console.error('Failed to write temp OCR file:', writeError);
+    return getMockAadhaar();
+  }
+
+  return new Promise((resolve) => {
+    const pythonScriptPath = path.join(__dirname, './ocr.py');
+    execFile(
+      'python', 
+      [pythonScriptPath, tempFilePath], 
+      { env: { ...process.env, PYTHONIOENCODING: 'utf-8' } }, 
+      (error, stdout, stderr) => {
+      // Clean up temp file
+      try {
+        if (fs.existsSync(tempFilePath)) {
+          fs.unlinkSync(tempFilePath);
+        }
+      } catch (cleanupErr) {
+        console.error('Failed to delete temp OCR file:', cleanupErr);
+      }
+
+      if (error) {
+        console.error('Python OCR process error:', error);
+        console.error('Python stderr:', stderr);
+        return resolve(getMockAadhaar());
+      }
+
+      try {
+        const parsed = JSON.parse(stdout.trim());
+        console.log('Python OCR Extracted Details:', parsed);
+        resolve({
+          name: parsed.name || 'Extracted Name',
+          aadhaarNumber: parsed.aadhaarNumber || 'N/A',
+          success: parsed.success ?? false
+        });
+      } catch (parseError) {
+        console.error('Failed to parse Python OCR output:', stdout);
+        resolve(getMockAadhaar());
+      }
+    });
+  });
 }
 
 function getMockAadhaar(): OCRExtractionResult {

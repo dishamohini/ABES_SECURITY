@@ -1,0 +1,38 @@
+services:
+  # 1. Backend Web Service (Docker deployment for Node + Python EasyOCR)
+  - type: web
+    name: abes-security-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: abes-security-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: FACE_PROVIDER
+        value: MOCK
+      - key: PORT
+        value: 5000
+
+  # 2. Frontend Static Site
+  - type: web
+    name: abes-security-frontend
+    env: static
+    buildCommand: npm run build --workspace=frontend
+    publishDir: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        fromRoute:
+          type: web
+          name: abes-security-backend
+          property: url
+
+databases:
+  - name: abes-security-db
+    plan: starter

@@ -4,6 +4,8 @@ import {
   LogOut, ShieldCheck, Inbox, CheckCircle2, XCircle, 
   Clock, Eye, User, FileText, Check, X, RefreshCw 
 } from 'lucide-react';
+import { ThemeSwitcher } from '../../components/ThemeSwitcher';
+import { API_BASE_URL } from '../../config';
 
 export const ApproverDashboard: React.FC = () => {
   const { user, token, logout } = useAuth();
@@ -98,12 +100,16 @@ export const ApproverDashboard: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={logout}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 text-xs font-semibold rounded-lg transition"
-        >
-          <LogOut className="w-4 h-4" /> Logout
-        </button>
+        <div className="flex items-center gap-3">
+          <ThemeSwitcher />
+
+          <button
+            onClick={logout}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 text-xs font-semibold rounded-lg transition"
+          >
+            <LogOut className="w-4 h-4" /> Logout
+          </button>
+        </div>
       </nav>
 
       {/* Main Container */}
@@ -148,7 +154,7 @@ export const ApproverDashboard: React.FC = () => {
                   {/* Photo Thumbnail */}
                   <div className="relative w-20 h-20 bg-slate-950 rounded-xl border border-white/5 overflow-hidden group">
                     <img 
-                      src={`http://localhost:5000/api/visitors/face/${req.visitor.id}?token=${token}`} 
+                      src={`${API_BASE_URL}/api/visitors/face/${req.visitor.id}?token=${token}`} 
                       alt="Biometric face" 
                       className="w-full h-full object-cover group-hover:scale-105 transition"
                       onError={(e) => {
@@ -277,7 +283,7 @@ export const ApproverDashboard: React.FC = () => {
           <div className="max-w-md w-full glass-panel border border-white/10 rounded-2xl overflow-hidden p-3 bg-slate-900 relative">
             <h4 className="text-xs text-brand-400 font-bold uppercase mb-2">Secure Biometric Photo (Audit Logged)</h4>
             <img 
-              src={`http://localhost:5000/api/visitors/face/${selectedVisitorId}?token=${token}`} 
+              src={`${API_BASE_URL}/api/visitors/face/${selectedVisitorId}?token=${token}`} 
               alt="Biometric Zoom" 
               className="w-full aspect-square object-cover rounded-xl border border-white/5" 
             />

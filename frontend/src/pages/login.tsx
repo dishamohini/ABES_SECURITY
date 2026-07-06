@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ShieldCheck, KeyRound, Mail, AlertCircle, RefreshCw } from 'lucide-react';
+import abesLogo from '../assets/abes_logo.png';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
 
 export const Login: React.FC = () => {
   const { login } = useAuth();
@@ -100,20 +102,24 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070b13] flex flex-col justify-center items-center px-4 py-8 relative overflow-hidden">
+      {/* Theme Switcher */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeSwitcher />
+      </div>
       {/* Background Orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Main card */}
-      <div className="w-full max-w-md glass-panel p-8 rounded-2xl shadow-glass border border-white/10 relative">
+      <div className="w-full max-w-md glass-panel p-8 rounded-2xl shadow-glass border border-white/10 relative overflow-hidden">
         
-        {/* Logo and title */}
-        <div className="text-center space-y-2 mb-8">
-          <div className="inline-flex p-3.5 bg-brand-500/10 border border-brand-500/30 rounded-2xl text-brand-400 mb-2">
-            <ShieldCheck className="w-9 h-9" />
+        {/* Logo and title header bar (spans complete width of the card) */}
+        <div className="mx-[-2rem] mt-[-2rem] mb-6 px-8 py-5 bg-slate-950/20 dark:bg-slate-950/40 border-b border-slate-100 dark:border-white/5 flex items-center gap-4">
+          <img src={abesLogo} alt="ABES Logo" className="h-16 w-auto object-contain shrink-0" />
+          <div className="text-left min-w-0">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-white leading-tight uppercase font-sans">ABES GATE SECURITY</h2>
+            <p className="text-[11px] text-slate-400 font-bold tracking-wider mt-0.5 leading-normal uppercase">Gate & Visitor Management</p>
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">ABES GATE SECURITY</h2>
-          <p className="text-sm text-slate-400">Integrated Gate & Visitor Management System</p>
         </div>
 
         {error && (
@@ -151,7 +157,20 @@ export const Login: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Password</label>
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Password</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsChangingPassword(true);
+                      setError(null);
+                      setSuccessMessage(null);
+                    }}
+                    className="text-xs text-brand-400 hover:text-brand-300 hover:underline font-semibold"
+                  >
+                    Change password?
+                  </button>
+                </div>
                 <div className="relative">
                   <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500" />
                   <input
@@ -175,19 +194,7 @@ export const Login: React.FC = () => {
               </button>
             </form>
 
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsChangingPassword(true);
-                  setError(null);
-                  setSuccessMessage(null);
-                }}
-                className="text-xs text-brand-400 hover:text-brand-300 hover:underline font-semibold"
-              >
-                Change password?
-              </button>
-            </div>
+
           </>
         ) : (
           <>

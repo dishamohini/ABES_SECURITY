@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
@@ -69,6 +69,7 @@ export async function registerVisitor(req: AuthenticatedRequest, res: Response) 
     purposeDetails,
     hostUserId, // optional (for MEETING)
     facePhotoBase64,
+    idPhotoBase64,
     aadhaarNumber,
     gateId
   } = req.body;
@@ -76,7 +77,7 @@ export async function registerVisitor(req: AuthenticatedRequest, res: Response) 
   const guardId = req.user?.id;
 
   if (!name || !phone || !consentAccepted || !purposeCategory || !facePhotoBase64 || !aadhaarNumber || !gateId) {
-    return res.status(400).json({ error: 'All fields including consent, face photo, and Aadhaar are required' });
+    return res.status(400).json({ error: 'All fields including consent, face photo, and Aadhaar/ID are required' });
   }
 
   if (!guardId) {
@@ -84,6 +85,21 @@ export async function registerVisitor(req: AuthenticatedRequest, res: Response) 
   }
 
   try {
+    // 0. Perform Face Match with ID Proof Photo if provided to ensure robustness
+    let faceMatchConfidence = 100.0;
+    if (idPhotoBase64) {
+      const liveFaceBuffer = base64ToBuffer(facePhotoBase64);
+      const idPhotoBuffer = base64ToBuffer(idPhotoBase64);
+      const matchResult = await faceRecognitionService.compareFaces(liveFaceBuffer, idPhotoBuffer);
+      
+      if (!matchResult.isMatch) {
+        return res.status(400).json({
+          error: `Biometric Verification Failed: Captured face photo does not match the photo on the ID proof (Confidence: ${matchResult.confidence}%).`
+        });
+      }
+      faceMatchConfidence = matchResult.confidence;
+    }
+
     // 1. Process and encrypt Aadhaar
     const aadhaarEncrypted = encrypt(aadhaarNumber);
     const aadhaarMasked = maskAadhaar(aadhaarNumber);
@@ -155,7 +171,7 @@ export async function registerVisitor(req: AuthenticatedRequest, res: Response) 
       guardId,
       'REGISTER_VISITOR',
       `Visitor:${visitor.id}`,
-      `Created visit request for ${name}. Purpose: ${purposeCategory}`
+      `Created visit request for ${name}. Purpose: ${purposeCategory}. ID-to-Face Match Confidence: ${faceMatchConfidence}%`
     );
 
     return res.status(201).json({
@@ -478,5 +494,109 @@ export async function exitMatchVisitor(req: AuthenticatedRequest, res: Response)
   } catch (error) {
     console.error('Exit scan error:', error);
     return res.status(500).json({ error: 'Internal server error processing exit match' });
+  }
+}
+
+/**
+ * Public Visit Request Fetch (No JWT auth required)
+ */
+export async function getPublicVisitRequest(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const request = await prisma.visitRequest.findUnique({
+      where: { id },
+      include: {
+        visitor: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          }
+        },
+        approver: {
+          select: {
+            id: true,
+            name: true,
+            department: true,
+            role: true,
+            post: true,
+          }
+        }
+      }
+    });
+
+    if (!request) {
+      return res.status(404).json({ error: 'Visit request not found' });
+    }
+
+    return res.json(request);
+  } catch (error) {
+    console.error('Fetch public request error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
+ * Public decide approval (for WhatsApp quick-approval links, no JWT auth required)
+ */
+export async function publicDecideApproval(req: Request, res: Response) {
+  const { id } = req.params;
+  const { decision, message } = req.body; // decision: APPROVED or REJECTED
+
+  if (!decision || !['APPROVED', 'REJECTED'].includes(decision)) {
+    return res.status(400).json({ error: 'Valid decision (APPROVED/REJECTED) is required' });
+  }
+
+  try {
+    const request = await prisma.visitRequest.findUnique({
+      where: { id },
+      include: { visitor: true, approver: true }
+    });
+
+    if (!request) {
+      return res.status(404).json({ error: 'Visit request not found' });
+    }
+
+    if (request.status !== 'PENDING') {
+      return res.status(400).json({ error: `Cannot decide. Request is currently ${request.status}` });
+    }
+
+    const host = request.approver;
+    if (!host) {
+      return res.status(400).json({ error: 'Host user not associated with this request' });
+    }
+
+    const updatedStatus = decision === 'APPROVED' ? 'APPROVED' : 'REJECTED';
+
+    const updatedRequest = await prisma.visitRequest.update({
+      where: { id },
+      data: {
+        status: updatedStatus,
+        approvedAt: decision === 'APPROVED' ? new Date() : null,
+        approvalMessage: decision === 'APPROVED' ? (message || 'Approved via WhatsApp Quick link') : null,
+        rejectionReason: decision === 'REJECTED' ? (message || 'Denied via WhatsApp Quick link') : null,
+        allowedById: decision === 'APPROVED' ? host.id : null,
+        allowedByRole: decision === 'APPROVED' ? host.role : null,
+        allowedByName: decision === 'APPROVED' ? host.name : null,
+      },
+    });
+
+    // Write audit log
+    await createAuditLog(
+      host.id,
+      `VISITOR_PUBLIC_DECISION_${decision}`,
+      `Visitor:${request.visitorId}`,
+      `WhatsApp decision: ${decision}. Host: ${host.name}. Note: ${message || 'No message provided'}`
+    );
+
+    return res.json({
+      success: true,
+      status: updatedRequest.status,
+      message: `Request has been ${decision.toLowerCase()} successfully via Quick link.`,
+    });
+  } catch (error) {
+    console.error('Public decide approval error:', error);
+    return res.status(500).json({ error: 'Internal server error during public decide' });
   }
 }
