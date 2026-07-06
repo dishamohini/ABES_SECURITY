@@ -382,7 +382,7 @@ export async function getLogs(req: AuthenticatedRequest, res: Response) {
     // Apply text search filter
     if (search) {
       const searchStr = String(search).toLowerCase();
-      logs = logs.filter((log) => {
+      logs = logs.filter((log: any) => {
         const uMatch = log.user?.name.toLowerCase().includes(searchStr) || log.user?.idCardNumber?.toLowerCase().includes(searchStr);
         const vMatch = log.vehicle?.plateNumber.toLowerCase().includes(searchStr) || log.vehicle?.stickerNumber.toLowerCase().includes(searchStr);
         const visMatch = log.visitor?.name.toLowerCase().includes(searchStr) || log.visitor?.phone.includes(searchStr);
